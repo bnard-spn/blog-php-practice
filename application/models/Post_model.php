@@ -55,4 +55,12 @@
 			$query = $this->db->get('categories');
 			return $query->result_array();
 		}
+
+		public function update_photo($post_image) {
+			$data = array(
+					'post_image' => $post_image
+				);
+			$this->db->where('id', $this->input->post('id'));
+			return $this->db->update('posts', $data);
+		}
 	}

@@ -82,4 +82,35 @@
 			$this->post_model->update_post();
 			redirect('posts');
 		}
+
+		public function updatephoto($slug) {
+			$data['post'] = $this->post_model->get_posts($slug);
+			$data['title'] = 'Update Photo';
+
+			$this->load->view('templates/header');
+			$this->load->view('posts/updatephoto', $data);
+			$this->load->view('templates/footer'); 
+		}
+
+		public function upload() {
+		//Upload Image
+			$config['upload_path'] = "./assets/images/posts";
+			$config['allowed_types'] = "gif|jpg|png";
+			$config['max_size'] = "2048";
+			$config['max_width'] = "500";
+			$config['max_height'] = "500";
+
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload()) {
+				$errors = array('error' => $this->upload->display_errors());
+				$post_image = 'noimage.jpg';
+			} else {
+				$data = array('upload_date' => $this->upload->data());
+				$post_image = $_FILES['userfile']['name'];
+			}
+
+			$this->post_model->update_photo($post_image);
+			redirect('posts');
+		}
+
 	}
