@@ -3,7 +3,7 @@
 <?php echo validation_errors(); ?>
 <?php echo form_open_multipart('posts/create'); ?>
   <div class="form-group">
-    <label>Tirle</label>
+    <label>Title</label>
     <input type="text" class="form-control" name="title" placeholder="Add Title">
   </div>
   <div class="form-group">
