@@ -28,6 +28,11 @@
 		}
 
 		public function create() {
+			//Check login
+			if(!$this->session->userdata('logged_in')) {
+				redirect('users/login');
+			}
+
 			$data['title'] = 'Create Post';
 			$data['categories'] = $this->post_model->get_categories();
 
@@ -62,13 +67,29 @@
 		}
 
 		public function delete($id) {
+			//Check login
+			if(!$this->session->userdata('logged_in')) {
+				redirect('users/login');
+			}
+
 			$this->post_model->delete_post($id);
 			$this->session->set_flashdata('post_deleted', 'Your post has been deleted.');
 			redirect('posts');
 		}
 
 		public function edit($slug) {
+			//Check login
+			if(!$this->session->userdata('logged_in')) {
+				redirect('users/login');
+			}
+
 			$data['post'] = $this->post_model->get_posts($slug);
+
+			//Check User
+			if($this->session->userdata('user_id') != $this->post_model->get_posts($slug)['user_id']) {
+				redirect('posts');
+			}
+
 			$data['categories'] = $this->post_model->get_categories();
 
 			if(empty($data['post'])) {
@@ -83,13 +104,29 @@
 		}
 
 		public function update() {
+			//Check login
+			if(!$this->session->userdata('logged_in')) {
+				redirect('users/login');
+			}
+
 			$this->post_model->update_post();
 			$this->session->set_flashdata('post_updated', 'Your post has been updated.');
 			redirect('posts');
 		}
 
 		public function updatephoto($slug) {
+			//Check login
+			if(!$this->session->userdata('logged_in')) {
+				redirect('users/login');
+			}
+
 			$data['post'] = $this->post_model->get_posts($slug);
+
+			//Check User
+			if($this->session->userdata('user_id') != $this->post_model->get_posts($slug)['user_id']) {
+				redirect('posts');
+			}
+			
 			$data['title'] = 'Update Photo';
 
 			$this->load->view('templates/header');
@@ -98,7 +135,12 @@
 		}
 
 		public function upload() {
-		//Upload Image
+			//Check login
+			if(!$this->session->userdata('logged_in')) {
+				redirect('users/login');
+			}
+
+			//Upload Image
 			$config['upload_path'] = "./assets/images/posts";
 			$config['allowed_types'] = "gif|jpg|png";
 			$config['max_size'] = "2048";
